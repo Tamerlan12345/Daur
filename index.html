@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Опрос о супермаркетах (Сбор данных)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .progress-bar { height: 6px; transition: width 0.3s ease; }
+        .question-card { transition: all 0.3s ease; }
+        .question-card.hidden { display: none; opacity: 0; transform: translateX(20px); height: 0; overflow: hidden; margin: 0; padding: 0; }
+        .question-card.active { display: block; opacity: 1; transform: translateX(0); }
+        .option-card { transition: all 0.2s ease; }
+        .option-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .thank-you-message { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
+        .submit-btn:disabled { background-color: #9ca3af; cursor: not-allowed; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-3xl">
+        <div class="mb-8">
+             <div class="flex justify-between items-center mb-2">
+                 <h2 class="text-lg font-semibold text-gray-700">Прогресс заполнения</h2>
+                 <span id="progress-text" class="text-sm font-medium text-gray-600">0%</span>
+             </div>
+             <div class="w-full bg-gray-200 rounded-full h-2.5">
+                 <div id="progress-bar" class="progress-bar bg-blue-600 rounded-full" style="width: 0%"></div>
+             </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Ваше мнение о работе супермаркетов</h1>
+            <p class="text-gray-600 mb-4">Здравствуйте! Спасибо за вашу обратную связь!</p>
+        </div>
+
+        <form id="survey-form" class="space-y-6">
+            <div id="q1" class="question-card active bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-start mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold mr-3">1</span>
+                    <h3 class="text-xl font-semibold text-gray-800">Как часто вы посещаете супермаркеты?</h3>
+                </div>
+                <div class="space-y-3 ml-11">
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="radio" name="frequency" value="daily" class="h-5 w-5 text-blue-600 focus:ring-blue-500"><span class="ml-3 text-gray-700">Ежедневно</span></label>
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="radio" name="frequency" value="few_times_week" class="h-5 w-5 text-blue-600 focus:ring-blue-500"><span class="ml-3 text-gray-700">Несколько раз в неделю</span></label>
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="radio" name="frequency" value="once_week" class="h-5 w-5 text-blue-600 focus:ring-blue-500"><span class="ml-3 text-gray-700">Раз в неделю</span></label>
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="radio" name="frequency" value="once_two_weeks" class="h-5 w-5 text-blue-600 focus:ring-blue-500"><span class="ml-3 text-gray-700">Раз в две недели</span></label>
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="radio" name="frequency" value="once_month" class="h-5 w-5 text-blue-600 focus:ring-blue-500"><span class="ml-3 text-gray-700">Раз в месяц или реже</span></label>
+                </div>
+                <div class="flex justify-end mt-4">
+                    <button type="button" onclick="nextQuestion('q1', 'q2')" class="next-btn px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">Далее <i class="fas fa-arrow-right ml-2"></i></button>
+                </div>
+            </div>
+
+            <div id="q2" class="question-card hidden bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-start mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold mr-3">2</span>
+                    <h3 class="text-xl font-semibold text-gray-800">Оставляли ли вы когда-либо отзыв о работе супермаркета?</h3>
+                </div>
+                <div class="space-y-3 ml-11">
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="radio" name="review_experience" value="yes" class="h-5 w-5 text-blue-600 focus:ring-blue-500"><span class="ml-3 text-gray-700">Да</span></label>
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="radio" name="review_experience" value="no" class="h-5 w-5 text-blue-600 focus:ring-blue-500"><span class="ml-3 text-gray-700">Нет</span></label>
+                </div>
+                <div class="flex justify-between mt-4">
+                    <button type="button" onclick="prevQuestion('q2', 'q1')" class="prev-btn px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"><i class="fas fa-arrow-left mr-2"></i> Назад</button>
+                    <button type="button" onclick="handleReviewExperience()" class="next-btn px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Далее <i class="fas fa-arrow-right ml-2"></i></button>
+                </div>
+            </div>
+
+            <div id="q3" class="question-card hidden bg-white rounded-xl shadow-md p-6">
+                 <div class="flex items-start mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold mr-3">3</span>
+                    <h3 class="text-xl font-semibold text-gray-800">Если нет, то почему? (Выберите все подходящие варианты)</h3>
+                </div>
+                <div class="space-y-3 ml-11">
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="no_review_reasons" value="no_time" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">У меня нет на это времени</span></label>
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="no_review_reasons" value="dont_believe" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">Не верю, что мой отзыв что-то изменит</span></label>
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="no_review_reasons" value="dont_know_how" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">Не знаю, где и как можно оставить отзыв</span></label>
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="no_review_reasons" value="useless" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">Считаю это бесполезным</span></label>
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="no_review_reasons" value="satisfied" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">В целом все устраивает, нет сильных эмоций для отзыва</span></label>
+                    <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="no_review_reasons" value="other" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">Другое (укажите)</span></label>
+                    <div id="other-reason-container" class="mt-2 ml-8 hidden">
+                        <input type="text" name="other_reason_text" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Укажите свою причину">
+                    </div>
+                </div>
+                <div class="flex justify-between mt-4">
+                    <button type="button" onclick="prevQuestion('q3', 'q2')" class="prev-btn px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"><i class="fas fa-arrow-left mr-2"></i> Назад</button>
+                    <button type="button" onclick="nextQuestion('q3', 'q5')" class="next-btn px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Далее <i class="fas fa-arrow-right ml-2"></i></button>
+                </div>
+            </div>
+
+            <div id="q4" class="question-card hidden bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-start mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold mr-3">3</span>
+                    <h3 class="text-xl font-semibold text-gray-800">Что могло бы побудить вас оставить отзыв о супермаркете?</h3>
+                </div>
+                <div class="space-y-3 ml-11">
+                     <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="motivation_factors" value="bonuses" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">Бонусы/скидки за отзыв</span></label>
+                     <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="motivation_factors" value="confidence" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">Уверенность, что отзыв будет учтен</span></label>
+                     <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="motivation_factors" value="easy_process" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">Простой и удобный способ оставить отзыв</span></label>
+                     <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="motivation_factors" value="reminder" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">Напоминание от супермаркета</span></label>
+                     <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="motivation_factors" value="strong_emotions" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">Сильные эмоции (положительные или отрицательные)</span></label>
+                     <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="motivation_factors" value="public_rating" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">Возможность повлиять на публичный рейтинг</span></label>
+                     <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="checkbox" name="motivation_factors" value="other_motivation" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3 text-gray-700">Другое (укажите)</span></label>
+                    <div id="other-motivation-container" class="mt-2 ml-8 hidden">
+                        <input type="text" name="other_motivation_text" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Укажите свою причину">
+                    </div>
+                </div>
+                <div class="flex justify-between mt-4">
+                    <button type="button" onclick="prevQuestion('q4', 'q2')" class="prev-btn px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"><i class="fas fa-arrow-left mr-2"></i> Назад</button>
+                    <button type="button" onclick="nextQuestion('q4', 'q5')" class="next-btn px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Далее <i class="fas fa-arrow-right ml-2"></i></button>
+                </div>
+            </div>
+
+            <div id="q5" class="question-card hidden bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-start mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold mr-3">4</span>
+                    <h3 class="text-xl font-semibold text-gray-800">Ваш возраст?</h3>
+                </div>
+                <div class="ml-11">
+                    <select name="age" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="" selected disabled>Выберите возрастную категорию</option>
+                        <option value="under_18">до 18</option>
+                        <option value="18_24">18-24</option>
+                        <option value="25_34">25-34</option>
+                        <option value="35_44">35-44</option>
+                        <option value="45_54">45-54</option>
+                        <option value="55_plus">55+</option>
+                    </select>
+                </div>
+                <div class="flex justify-between mt-4">
+                    <button type="button" onclick="prevQuestion('q5', currentPrevQuestion())" class="prev-btn px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"><i class="fas fa-arrow-left mr-2"></i> Назад</button>
+                    <button type="button" onclick="nextQuestion('q5', 'q6')" class="next-btn px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Далее <i class="fas fa-arrow-right ml-2"></i></button>
+                </div>
+            </div>
+
+            <div id="q6" class="question-card hidden bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-start mb-4">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-bold mr-3">5</span>
+                    <h3 class="text-xl font-semibold text-gray-800">Ваш пол?</h3>
+                </div>
+                <div class="space-y-3 ml-11">
+                     <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="radio" name="gender" value="male" class="h-5 w-5 text-blue-600 focus:ring-blue-500"><span class="ml-3 text-gray-700">Мужской</span></label>
+                     <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="radio" name="gender" value="female" class="h-5 w-5 text-blue-600 focus:ring-blue-500"><span class="ml-3 text-gray-700">Женский</span></label>
+                     <label class="option-card flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-300"><input type="radio" name="gender" value="prefer_not_say" class="h-5 w-5 text-blue-600 focus:ring-blue-500"><span class="ml-3 text-gray-700">Предпочитаю не отвечать</span></label>
+                </div>
+                <div class="flex justify-between mt-4">
+                    <button type="button" onclick="prevQuestion('q6', 'q5')" class="prev-btn px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"><i class="fas fa-arrow-left mr-2"></i> Назад</button>
+                    <button type="button" onclick="submitSurvey()" class="submit-btn px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">Завершить и сохранить ответ <i class="fas fa-check ml-2"></i></button>
+                </div>
+            </div>
+        </form>
+
+        <div id="thank-you" class="hidden thank-you-message rounded-xl shadow-lg p-8 text-center text-white">
+             <div class="mb-6">
+                 <i class="fas fa-check-circle text-6xl text-white opacity-90"></i>
+             </div>
+             <h2 class="text-2xl md:text-3xl font-bold mb-4">Спасибо! Ваш ответ сохранен.</h2>
+             <p class="text-lg mb-6 opacity-90">Вы можете пройти опрос еще раз.</p>
+             <div class="flex flex-col sm:flex-row justify-center gap-4">
+                 <button onclick="resetSurvey()" class="px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 font-medium"><i class="fas fa-redo mr-2"></i> Пройти опрос еще раз</button>
+             </div>
+        </div>
+    </div>
+
+<script>
+    // ⬇️ *** ВСТАВЬТЕ СЮДА ВАШ URL, СКОПИРОВАННЫЙ НА ШАГЕ 3 *** ⬇️
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzXh4WKqA8fqeHR-FvvqUw4OM8g2uiQzI8c-hl_4m534Pc1I4U7GrPN04QF1Lm9a9xf/exec'; 
+
+    let currentQuestion = 'q1';
+    let answers = {};
+    let reviewExperience = null;
+
+    const form = document.getElementById('survey-form');
+    const submitBtn = document.querySelector('.submit-btn');
+
+    function submitSurvey() {
+        if (!validateQuestion('q6')) return;
+        saveAnswers('q6');
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Сохранение... <i class="fas fa-spinner fa-spin ml-2"></i>';
+
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify(answers)})
+            .then(response => {
+                console.log('Success!', response);
+                document.getElementById('survey-form').classList.add('hidden');
+                document.getElementById('thank-you').classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert('Произошла ошибка при сохранении вашего ответа. Пожалуйста, попробуйте еще раз.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Завершить и сохранить ответ <i class="fas fa-check ml-2"></i>';
+            });
+    }
+    
+    function resetSurvey() {
+        form.reset();
+        document.getElementById('other-reason-container').classList.add('hidden');
+        document.getElementById('other-motivation-container').classList.add('hidden');
+        document.getElementById('thank-you').classList.add('hidden');
+        form.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Завершить и сохранить ответ <i class="fas fa-check ml-2"></i>';
+        
+        currentQuestion = 'q1';
+        answers = {};
+        reviewExperience = null;
+        
+        document.querySelectorAll('.question-card').forEach(card => {
+            card.classList.add('hidden');
+            card.classList.remove('active');
+        });
+        document.getElementById('q1').classList.remove('hidden');
+        document.getElementById('q1').classList.add('active');
+        updateProgress();
+    }
+    
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.name === 'no_review_reasons' && this.value === 'other') {
+                document.getElementById('other-reason-container').classList.toggle('hidden', !this.checked);
+            }
+            if (this.name === 'motivation_factors' && this.value === 'other_motivation') {
+                document.getElementById('other-motivation-container').classList.toggle('hidden', !this.checked);
+            }
+        });
+    });
+
+    function showQuestion(id) {
+        document.querySelectorAll('.question-card').forEach(card => {
+            card.classList.remove('active');
+            card.classList.add('hidden');
+        });
+        const questionToShow = document.getElementById(id);
+        questionToShow.classList.remove('hidden');
+        setTimeout(() => questionToShow.classList.add('active'), 10);
+        currentQuestion = id;
+        updateProgress();
+    }
+
+    function nextQuestion(currentId, nextId) {
+        if (!validateQuestion(currentId)) return;
+        saveAnswers(currentId);
+        showQuestion(nextId);
+    }
+
+    function prevQuestion(currentId, prevId) {
+        showQuestion(prevId);
+    }
+
+    function currentPrevQuestion() {
+        return reviewExperience === 'no' ? 'q3' : 'q4';
+    }
+
+    function handleReviewExperience() {
+        const selectedOption = document.querySelector('input[name="review_experience"]:checked');
+        if (!selectedOption) {
+            alert('Пожалуйста, выберите один из вариантов');
+            return;
+        }
+        reviewExperience = selectedOption.value;
+        saveAnswers('q2');
+        if (reviewExperience === 'no') {
+            nextQuestion('q2', 'q3');
+        } else {
+            nextQuestion('q2', 'q4');
+        }
+    }
+
+    function validateQuestion(questionId) {
+        let isValid = false;
+        let alertMessage = '';
+
+        switch(questionId) {
+            case 'q1':
+                isValid = document.querySelector('input[name="frequency"]:checked');
+                alertMessage = 'Пожалуйста, выберите частоту посещения.';
+                break;
+            case 'q2':
+                 isValid = document.querySelector('input[name="review_experience"]:checked');
+                 alertMessage = 'Пожалуйста, выберите один из вариантов.';
+                 break;
+            case 'q3':
+                isValid = document.querySelectorAll('input[name="no_review_reasons"]:checked').length > 0;
+                alertMessage = 'Пожалуйста, выберите хотя бы один вариант.';
+                break;
+            case 'q4':
+                isValid = document.querySelectorAll('input[name="motivation_factors"]:checked').length > 0;
+                alertMessage = 'Пожалуйста, выберите хотя бы один вариант.';
+                break;
+            case 'q5':
+                isValid = document.querySelector('select[name="age"]').value;
+                alertMessage = 'Пожалуйста, выберите возрастную категорию.';
+                break;
+            case 'q6':
+                isValid = document.querySelector('input[name="gender"]:checked');
+                alertMessage = 'Пожалуйста, укажите ваш пол.';
+                break;
+            default:
+                isValid = true;
+        }
+
+        if (!isValid) {
+            alert(alertMessage);
+        }
+        return isValid;
+    }
+
+    function saveAnswers(questionId) {
+        const questionElement = document.getElementById(questionId);
+        const questionData = new FormData(questionElement);
+        
+        switch(questionId) {
+            case 'q1':
+                answers.frequency = questionData.get('frequency');
+                break;
+            case 'q2':
+                answers.review_experience = questionData.get('review_experience');
+                delete answers.no_review_reasons;
+                delete answers.other_reason;
+                delete answers.motivation_factors;
+                delete answers.other_motivation;
+                break;
+            case 'q3':
+                answers.no_review_reasons = questionData.getAll('no_review_reasons');
+                if (answers.no_review_reasons.includes('other')) {
+                    answers.other_reason = questionData.get('other_reason_text');
+                }
+                break;
+            case 'q4':
+                answers.motivation_factors = questionData.getAll('motivation_factors');
+                if (answers.motivation_factors.includes('other_motivation')) {
+                    answers.other_motivation = questionData.get('other_motivation_text');
+                }
+                break;
+            case 'q5':
+                answers.age = questionData.get('age');
+                break;
+            case 'q6':
+                answers.gender = questionData.get('gender');
+                break;
+        }
+    }
+    
+    function updateProgress() {
+        const totalQuestions = 5;
+        let answeredQuestions = 0;
+        if (answers.frequency) answeredQuestions++;
+        if (answers.review_experience) answeredQuestions++;
+        if (answers.no_review_reasons || answers.motivation_factors) answeredQuestions++;
+        if (answers.age) answeredQuestions++;
+        if (answers.gender) answeredQuestions++;
+
+        const progress = Math.min((answeredQuestions / totalQuestions) * 100, 100);
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+        document.getElementById('progress-text').textContent = `${Math.round(progress)}%`;
+    }
+</script>
+</body>
+</html>
