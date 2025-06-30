@@ -163,7 +163,7 @@
     </div>
 
 <script>
-    // ⬇️ *** ВСТАВЬТЕ СЮДА ВАШ URL, СКОПИРОВАННЫЙ НА ШАГЕ 3 *** ⬇️
+    // ⬇️ *** ВСТАВЬТЕ СЮДА ВАШ URL, ПОЛУЧЕННЫЙ ПРИ ПУБЛИКАЦИИ GOOGLE APPS SCRIPT *** ⬇️
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzXh4WKqA8fqeHR-FvvqUw4OM8g2uiQzI8c-hl_4m534Pc1I4U7GrPN04QF1Lm9a9xf/exec'; 
 
     let currentQuestion = 'q1';
@@ -308,37 +308,46 @@
     }
 
     function saveAnswers(questionId) {
-        const questionElement = document.getElementById(questionId);
-        const questionData = new FormData(questionElement);
-        
+        const formEl = document.getElementById('survey-form');
+
         switch(questionId) {
             case 'q1':
-                answers.frequency = questionData.get('frequency');
+                answers.frequency = formEl.querySelector('input[name="frequency"]:checked')?.value;
                 break;
             case 'q2':
-                answers.review_experience = questionData.get('review_experience');
+                answers.review_experience = formEl.querySelector('input[name="review_experience"]:checked')?.value;
                 delete answers.no_review_reasons;
                 delete answers.other_reason;
                 delete answers.motivation_factors;
                 delete answers.other_motivation;
                 break;
             case 'q3':
-                answers.no_review_reasons = questionData.getAll('no_review_reasons');
+                const noReviewReasons = [];
+                formEl.querySelectorAll('input[name="no_review_reasons"]:checked').forEach(cb => {
+                    noReviewReasons.push(cb.value);
+                });
+                answers.no_review_reasons = noReviewReasons;
+
                 if (answers.no_review_reasons.includes('other')) {
-                    answers.other_reason = questionData.get('other_reason_text');
+                    answers.other_reason = formEl.querySelector('input[name="other_reason_text"]').value;
                 }
                 break;
             case 'q4':
-                answers.motivation_factors = questionData.getAll('motivation_factors');
+                const motivationFactors = [];
+                formEl.querySelectorAll('input[name="motivation_factors"]:checked').forEach(cb => {
+                    motivationFactors.push(cb.value);
+                });
+                answers.motivation_factors = motivationFactors;
+                
                 if (answers.motivation_factors.includes('other_motivation')) {
-                    answers.other_motivation = questionData.get('other_motivation_text');
+                    answers.other_motivation = formEl.querySelector('input[name="other_motivation_text"]').value;
                 }
                 break;
             case 'q5':
-                answers.age = questionData.get('age');
+                answers.age = formEl.querySelector('select[name="age"]').value;
                 break;
             case 'q6':
-                answers.gender = questionData.get('gender');
+                answers.gender = formEl.querySelector('input[name="gender"]:checked')?.value;
                 break;
         }
     }
